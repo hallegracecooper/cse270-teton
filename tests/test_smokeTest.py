@@ -33,22 +33,41 @@ class TestSmokeTest():
     self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(1489, 845)
     self.driver.find_element(By.LINK_TEXT, "Directory").click()
-    assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
+    
+    # Improved validation: Check if the directory contains the expected text for gold-member
+    gold_member_text = self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text
+    assert gold_member_text == "Teton Turf and Tree"
+    
+    # Ensure the directory list interaction is functioning
     self.driver.find_element(By.ID, "directory-list").click()
-    assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
+    gold_member_text_after_click = self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text
+    assert gold_member_text_after_click == "Teton Turf and Tree"
   
   def test_homePage(self):
     self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(974, 1039)
+    
+    # Check if the header logo image exists
     elements = self.driver.find_elements(By.CSS_SELECTOR, ".header-logo img")
     assert len(elements) > 0
-    assert self.driver.find_element(By.CSS_SELECTOR, ".header-title > h1").text == "Teton Idaho"
-    assert self.driver.find_element(By.CSS_SELECTOR, ".header-title > h2").text == "Chamber of Commerce"
+    
+    # Validate header text
+    header_title = self.driver.find_element(By.CSS_SELECTOR, ".header-title > h1").text
+    assert header_title == "Teton Idaho"
+    
+    header_subtitle = self.driver.find_element(By.CSS_SELECTOR, ".header-title > h2").text
+    assert header_subtitle == "Chamber of Commerce"
+    
+    # Check page title
     assert self.driver.title == "Teton Idaho CoC"
-    elements = self.driver.find_elements(By.CSS_SELECTOR, ".spotlight1 > h4")
-    assert len(elements) > 0
-    elements = self.driver.find_elements(By.CSS_SELECTOR, ".spotlight2 > h4")
-    assert len(elements) > 0
+    
+    # Ensure spotlight elements exist
+    spotlight1 = self.driver.find_elements(By.CSS_SELECTOR, ".spotlight1 > h4")
+    assert len(spotlight1) > 0
+    spotlight2 = self.driver.find_elements(By.CSS_SELECTOR, ".spotlight2 > h4")
+    assert len(spotlight2) > 0
+    
+    # Ensure "Join Us" link is present and functional
     elements = self.driver.find_elements(By.LINK_TEXT, "Join Us")
     assert len(elements) > 0
     self.driver.find_element(By.LINK_TEXT, "Join Us").click()
@@ -58,13 +77,22 @@ class TestSmokeTest():
     self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(1489, 845)
     self.driver.find_element(By.LINK_TEXT, "Join").click()
+    
+    # Check if the first name input field is present
     elements = self.driver.find_elements(By.NAME, "fname")
     assert len(elements) > 0
     self.driver.find_element(By.NAME, "fname").send_keys("Halle")
+    
+    # Ensure the last name input field is present
     self.driver.find_element(By.NAME, "lname").send_keys("Cooper")
+    
+    # Fill in the business information
     self.driver.find_element(By.NAME, "bizname").send_keys("Coopers")
     self.driver.find_element(By.NAME, "biztitle").send_keys("CEO")
+    
+    # Submit the form and verify email input field
     self.driver.find_element(By.NAME, "submit").click()
     elements = self.driver.find_elements(By.NAME, "email")
     assert len(elements) > 0
-  
+
+    # Optional: Add an assertion for any expected post-submission text or functionality, if applicable
